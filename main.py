@@ -1,6 +1,7 @@
 import os
 import time
 from selenium import webdriver
+from selenium.common import NoSuchElementException
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
@@ -27,6 +28,25 @@ class TarrAutomation:
         password_field.send_keys(password)
         login_button.click()
 
+    def check_out_personal_info(self):
+        try:
+            personal_data_link = WebDriverWait(self.driver, 10).until(
+                EC.presence_of_element_located((By.LINK_TEXT, 'Személyes adatok'))
+            )
+            personal_data_link.click()
+            print("Successfully clicked on 'Személyes adatok' link")
+        except Exception as e:
+            print("Error:", str(e))
+
+        try:
+            element = WebDriverWait(self.driver, 10).until(
+                EC.visibility_of_element_located(
+                    (By.XPATH, '//div[@class="service-data__value" and contains(text(), "Állandó")]'))
+            )
+            print("Element containing 'Állandó' found on the page.")
+        except Exception as e:
+            print("Error: ", str(e))
+
     def logout(self):
         element = WebDriverWait(self.driver, 10).until(
             EC.element_to_be_clickable((By.CLASS_NAME, "profile"))
@@ -45,6 +65,7 @@ class TarrAutomation:
 
 if __name__ == "__main__":
     automation = TarrAutomation()
-    automation.login('test_user', 'testpassword')
+    automation.login('szabjant13', 'Szabjanqwe0123.')
+    automation.check_out_personal_info()
     automation.logout()
     automation.close_browser()
