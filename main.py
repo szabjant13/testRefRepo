@@ -2,6 +2,7 @@ import os
 import time
 from selenium import webdriver
 from selenium.common import NoSuchElementException
+from selenium.common import ElementNotInteractableException
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
@@ -35,28 +36,25 @@ class TarrAutomation:
             )
             personal_data_link.click()
             print("Successfully clicked on 'Személyes adatok' link")
-        except Exception as e:
+        except NoSuchElementException as e:
+            print("Error:", str(e))
+
+    def logout(self):
+        try:
+            element = WebDriverWait(self.driver, 10).until(
+                EC.element_to_be_clickable((By.CLASS_NAME, "profile"))
+            )
+            element.click()
+        except NoSuchElementException as e:
             print("Error:", str(e))
 
         try:
-            element = WebDriverWait(self.driver, 10).until(
-                EC.visibility_of_element_located(
-                    (By.XPATH, '//div[@class="service-data__value" and contains(text(), "Állandó")]'))
+            logout_button = WebDriverWait(self.driver, 10).until(
+                EC.element_to_be_clickable((By.CLASS_NAME, "btn--primary"))
             )
-            print("Element containing 'Állandó' found on the page.")
-        except Exception as e:
-            print("Error: ", str(e))
-
-    def logout(self):
-        element = WebDriverWait(self.driver, 10).until(
-            EC.element_to_be_clickable((By.CLASS_NAME, "profile"))
-        )
-        element.click()
-
-        logout_button = WebDriverWait(self.driver, 10).until(
-            EC.element_to_be_clickable((By.CLASS_NAME, "btn--primary"))
-        )
-        logout_button.click()
+            logout_button.click()
+        except ElementNotInteractableException as e:
+            print("Error:", str(e))
 
     def close_browser(self):
         time.sleep(3)
