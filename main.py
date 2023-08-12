@@ -102,7 +102,7 @@ class TarrAutomation:
 
 if __name__ == "__main__":
     automation = TarrAutomation()
-    automation.login('szabjant13', 'Szabjanqwe0123.')
+    automation.login('testuser', 'testPassword')
     automation.check_out_personal_info()
     automation.set_new_contact_data('teszt@teszt.hu', '0674123456')
     automation.logout()
